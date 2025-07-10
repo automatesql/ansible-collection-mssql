@@ -17,7 +17,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install Ansible
-        run: pip install ansible
+        run: pip install ansible-core
 
       - name: Get version from release tag
         id: get_version
@@ -27,22 +27,7 @@ jobs:
         run: |
           sed -i "s/version: .*/version: ${{ env.VERSION }}/" galaxy.yml
 
-      - name: Build the collection
-        run: ansible-galaxy collection build
-
       - name: Publish to Galaxy
-        run: |
-          # Construct the expected filename from galaxy.yml and the release version
-          NAMESPACE=$(grep '^namespace:' galaxy.yml | awk '{print $2}')
-          NAME=$(grep '^name:' galaxy.yml | awk '{print $2}')
-          FILE_PATH="${NAMESPACE}-${NAME}-${{ env.VERSION }}.tar.gz"
-
-          # Check if the file exists before trying to publish
-          if [ ! -f "$FILE_PATH" ]; then
-            echo "ERROR: Built collection file not found at $FILE_PATH"
-            ls -l
-            exit 1
-          fi
-
-          ansible-galaxy collection publish "$FILE_PATH" --api-key ${{ secrets.GALAXY_API_KEY }}
-          
+        uses: ansible/ansible-galaxy-action@v1
+        with:
+          api_key: ${{ secrets.GALAXY_API_KEY }}
