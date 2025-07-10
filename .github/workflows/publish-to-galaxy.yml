@@ -24,7 +24,8 @@ jobs:
         run: echo "VERSION=$(echo ${{ github.ref_name }} | sed -e 's/^v//')" >> $GITHUB_ENV
 
       - name: Update galaxy.yml with release version
-        run: sed -i "s/version: .*/version: ${{ env.VERSION }}/" galaxy.yml
+        run: |
+          sed -i "s/version: .*/version: ${{ env.VERSION }}/" galaxy.yml
 
       - name: Build the collection
         run: ansible-galaxy collection build
