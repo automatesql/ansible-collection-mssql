@@ -32,5 +32,17 @@ jobs:
 
       - name: Publish to Galaxy
         run: |
-          FILE_PATH=$(find . -name "automatesql-mssql-*.tar.gz")
-          ansible-galaxy collection publish $FILE_PATH --api-key ${{ secrets.GALAXY_API_KEY }}
+          # Construct the expected filename from galaxy.yml and the release version
+          NAMESPACE=$(grep '^namespace:' galaxy.yml | awk '{print $2}')
+          NAME=$(grep '^name:' galaxy.yml | awk '{print $2}')
+          FILE_PATH="${NAMESPACE}-${NAME}-${{ env.VERSION }}.tar.gz"
+
+          # Check if the file exists before trying to publish
+          if [ ! -f "$FILE_PATH" ]; then
+            echo "ERROR: Built collection file not found at $FILE_PATH"
+            ls -l
+            exit 1
+          fi
+
+          ansible-galaxy collection publish "$FILE_PATH" --api-key ${{ secrets.GALAXY_API_KEY }}
+          
