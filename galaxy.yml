@@ -47,8 +47,8 @@ tags:
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies:
- - ansible.windows
- - community.windows
+  ansible.windows
+  community.windows
 
 # The URL of the originating SCM repository
 repository: http://github.com/automatesql/ansible-collection-mssql
