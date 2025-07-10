@@ -1,6 +1,4 @@
-# Ansible Collection: automatesql.mssql
-
-This collection provides a single, powerful role for the complete, automated installation and configuration of Microsoft SQL Server on Windows. It is designed to be idempotent and flexible, handling everything from initial setup to the deployment of essential maintenance solutions.
+## SQL_INSTALL
 
 This role can perform the following actions:
 * Prepare and format disks for SQL Server data, logs, and TempDB.
