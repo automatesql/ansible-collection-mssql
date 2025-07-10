@@ -1,0 +1,23 @@
+---
+- name: Create the DBA database
+  ansible.windows.win_dsc:
+    resource_name: SqlDatabase
+    Ensure: "Present"
+    Name: "{{ item }}"
+    OwnerName: "sa"
+    ServerName: "localhost"
+    InstanceName: "{{ rl_mssql_instance_name }}"
+  loop:
+    - DBA
+
+- name: Deploy objects to the DBA database
+  ansible.windows.win_dsc:
+    resource_name: SqlScript
+    Id: "DBAObjects"
+    SetFilePath: "{{ rl_mssql_temp_folder }}\\Set-DBA.sql"
+    GetFilePath: "{{ rl_mssql_temp_folder }}\\Get-DBA.sql"
+    TestFilePath: "{{ rl_mssql_temp_folder }}\\Test-DBA.sql"
+    QueryTimeout: 600
+    ServerName: "localhost"
+    InstanceName: "{{ rl_mssql_instance_name }}"
+    Encrypt: "Optional"

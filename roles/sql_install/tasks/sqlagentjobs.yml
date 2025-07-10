@@ -1,0 +1,13 @@
+---
+- name: Create the standard set of maintenance jobs
+  ansible.windows.win_dsc:
+    resource_name: SqlScript
+    Id: "MaintenanceJobs"
+    SetFilePath: "{{ rl_mssql_temp_folder }}\\Set-StandardMaintenanceJobs.sql"
+    GetFilePath: "{{ rl_mssql_temp_folder }}\\Get-StandardMaintenanceJobs.sql"
+    TestFilePath: "{{ rl_mssql_temp_folder }}\\Test-StandardMaintenanceJobs.sql"
+    Variable: "BackupDirectory={{ rl_mssql_backup_path }}"
+    QueryTimeout: 600
+    ServerName: "localhost"
+    InstanceName: "{{ rl_mssql_instance_name }}"
+    Encrypt: "Optional"

@@ -1,0 +1,31 @@
+---
+- name: Create the databasemail_display_name var
+  ansible.builtin.set_fact:
+    databasemail_display_name: "{{ '{{ ansible_hostname }}' if rl_mssql_instance_name == 'MSSQLSERVER' else '{{ ansible_hostname }}\\{{ rl_mssql_instance_name }}'
+      }}"
+
+- name: Enable database mail
+  ansible.windows.win_dsc:
+    resource_name: SQLConfiguration
+    OptionName: "Database Mail XPs"
+    OptionValue: 1
+    RestartService: false
+    ServerName: "localhost"
+    InstanceName: "{{ rl_mssql_instance_name }}"
+
+- name: Setup default database mail profile and account
+  ansible.windows.win_dsc:
+    resource_name: SqlDatabaseMail
+    Ensure: "Present"
+    MailServerName: "{{ item.mailservername }}"
+    AccountName: "{{ item.accountname }}"
+    ProfileName: "{{ item.profilename }}"
+    Description: "{{ item.description }}"
+    EmailAddress: "{{ item.emailaddress }}"
+    ReplyToAddress: "{{ item.replytoaddress }}"
+    DisplayName: "{{ databasemail_display_name }}"
+    LoggingLevel: "{{ item.logginglevel }}"
+    TcpPort: "{{ item.tcpport }}"
+    ServerName: "localhost"
+    InstanceName: "{{ rl_mssql_instance_name }}"
+  loop: "{{ rl_mssql_dbmail }}"
