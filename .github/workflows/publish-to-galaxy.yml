@@ -1,0 +1,26 @@
+name: Publish to Ansible Galaxy
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Build the collection
+        run: ansible-galaxy collection build
+
+      - name: Publish to Galaxy
+        run: ansible-galaxy collection publish automatesql-mssql-*.tar.gz --api-key ${{ secrets.GALAXY_API_KEY }}
