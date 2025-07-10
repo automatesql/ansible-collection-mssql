@@ -9,18 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python 3
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
       - name: Install Ansible
         run: pip install ansible
 
+      - name: Get version from release tag
+        id: get_version
+        run: echo "VERSION=${{ github.ref_name }}" | sed -e 's/^v//' >> $GITHUB_ENV
+
+      - name: Update galaxy.yml with release version
+        run: sed -i "s/version: .*/version: ${{ env.VERSION }}/" galaxy.yml
+
       - name: Build the collection
         run: ansible-galaxy collection build
 
       - name: Publish to Galaxy
-        run: ansible-galaxy collection publish automatesql-mssql-*.tar.gz --api-key ${{ secrets.GALAXY_API_KEY }}
+        run: >-
+          ansible-galaxy collection publish automatesql-mssql-*.tar.gz
+          --api-key ${{ secrets.GALAXY_API_KEY }}
