@@ -3,9 +3,7 @@
   ansible.builtin.set_fact:
     sa_password_switch: "{{ '/SAPWD={{ sql_install_sapwd }}' }}"
 
-- name: Install Default instance
+- name: Install instance
   ansible.windows.win_command:
     cmd: "{{ disk_image_out.results[0].mount_paths[0] }}setup.exe /ConfigurationFile={{ sql_install_temp_folder }}\\Configuration.ini {{ sa_password_switch }}"
-  when:
-    - not service_info.exists
   # no_log: true
