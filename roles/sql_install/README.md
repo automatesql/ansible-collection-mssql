@@ -65,6 +65,7 @@ This role is highly configurable using the following variables.
 ### Directory and Path Configuration
 | Variable | Default Value | Description |
 |---|---|---|
+| `sql_install_disks_to_format` | (see defaults) | A list of dictionaries defining the disks to partition and format. Each item needs a `number`, `letter`, and `label`. |
 | `sql_install_prep_disks` | `"true"` | Whether the role should attempt to format and label disks. |
 | `sql_install_installshareddir` | `C:\Program Files\Microsoft SQL Server` | The path for shared SQL Server components. |
 | `sql_install_installsharedwowdir` | `C:\Program Files (x86)\Microsoft SQL Server` | The path for 32-bit shared SQL Server components. |
@@ -117,12 +118,12 @@ Here is a basic example of how to use this role in a playbook. Create a host inv
 
 ```yaml
 ---
-- name: Install SQL Server using mssql role
+- name: Install SQL Server using sql_install role
   hosts: sqlservers
   gather_facts: true
 
   tasks:
-    - name: Import the mssql role
+    - name: Import the sql_install role
       ansible.builtin.import_role:
         name: automatesql.mssql.sql_install
 ```

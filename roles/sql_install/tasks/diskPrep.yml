@@ -16,11 +16,8 @@
   community.windows.win_partition:
     drive_letter: "{{ item.letter }}"
     disk_number: "{{ item.number }}"
-    partition_size: -1
-  loop:
-    - { letter: "T", number: 1 }
-    - { letter: "E", number: 2 }
-    - { letter: "F", number: 3 }
+    partition_size: -1 # Use the whole disk
+  loop: "{{ sql_install_disks_to_format }}"
 
 - name: Format disks
   community.windows.win_format:
@@ -28,7 +25,4 @@
     file_system: REFS
     new_label: "{{ item.label }}"
     allocation_unit_size: 65536
-  loop:
-    - { letter: "T", label: "TEMPDB" }
-    - { letter: "E", label: "DATA" }
-    - { letter: "F", label: "LOG" }
+  loop: "{{ sql_install_disks_to_format }}"

@@ -1,7 +1,14 @@
 ---
-# defaults file for mssql
+# This file contains default variables for the sql_install role.
+# disk variables.
+sql_install_disks_to_format:
+  - { number: 1, letter: "T", label: "TEMPDB" }
+  - { number: 2, letter: "E", label: "DATA" }
+  - { number: 3, letter: "F", label: "LOG" }
+
+# sql installation variables
 sql_install_edition: "Standard Developer"
-sql_install_prep_disks: "true"
+sql_install_prep_disks: "false"
 sql_install_temp_folder: C:\temp
 sql_install_share: "/home/username/ISO/" # set this directory to your home directory
 sql_install_enableupdates: "true"
