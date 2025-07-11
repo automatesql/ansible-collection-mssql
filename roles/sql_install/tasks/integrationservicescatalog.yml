@@ -5,7 +5,7 @@
     OptionName: "clr enabled"
     OptionValue: 1
     ServerName: "localhost"
-    InstanceName: "{{ rl_mssql_instance_name }}"
+    InstanceName: "{{ sql_install_instance_name }}"
 
 - name: Setup the Integration Services Catalog (Conditional)
   vars:
@@ -25,5 +25,5 @@
     SetScript: |
       # Inject the entire script content, then call the function with all parameters.
       {{ ssis_script_content }}
-      Set-SsisCatalog -InstanceName '{{ instance_name_var }}' -Password '{{ rl_mssql_ssisdb_password }}' -SqlVersion '{{ rl_mssql_version }}'
+      Set-SsisCatalog -InstanceName '{{ instance_name_var }}' -Password '{{ sql_install_ssisdb_password }}' -SqlVersion '{{ sql_install_version }}'
 

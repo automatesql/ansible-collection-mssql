@@ -1,7 +1,7 @@
 ---
 - name: Create the databasemail_display_name var
   ansible.builtin.set_fact:
-    databasemail_display_name: "{{ '{{ ansible_hostname }}' if rl_mssql_instance_name == 'MSSQLSERVER' else '{{ ansible_hostname }}\\{{ rl_mssql_instance_name }}'
+    databasemail_display_name: "{{ '{{ ansible_hostname }}' if sql_install_instance_name == 'MSSQLSERVER' else '{{ ansible_hostname }}\\{{ sql_install_instance_name }}'
       }}"
 
 - name: Enable database mail
@@ -11,7 +11,7 @@
     OptionValue: 1
     RestartService: false
     ServerName: "localhost"
-    InstanceName: "{{ rl_mssql_instance_name }}"
+    InstanceName: "{{ sql_install_instance_name }}"
 
 - name: Setup default database mail profile and account
   ansible.windows.win_dsc:
@@ -27,5 +27,5 @@
     LoggingLevel: "{{ item.logginglevel }}"
     TcpPort: "{{ item.tcpport }}"
     ServerName: "localhost"
-    InstanceName: "{{ rl_mssql_instance_name }}"
-  loop: "{{ rl_mssql_dbmail }}"
+    InstanceName: "{{ sql_install_instance_name }}"
+  loop: "{{ sql_install_dbmail }}"

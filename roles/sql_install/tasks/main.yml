@@ -3,19 +3,16 @@
 # Set a fact for the SQL Server version being installed"
 - name: Set SQL Server version fact
   ansible.builtin.set_fact:
-    rl_mssql_version: "{{ rl_mssql_iso_source[0].version }}"
+    sql_install_version: "{{ sql_install_iso_source[0].version }}"
 
 - name: Print SQL Server version
   ansible.builtin.debug:
-    msg: "Installing SQL Server version: {{ rl_mssql_version }}"
-
-- name: Include sensitive variables
-  ansible.builtin.include_vars: "./vars/sensitive_vars.yml"
+    msg: "Installing SQL Server version: {{ sql_install_version }}"
 
 - name: Partition and Format disks
   ansible.builtin.include_tasks: diskPrep.yml
   when:
-    - rl_mssql_prep_disks == "true"
+    - sql_install_prep_disks == "true"
   tags: diskprep
 
 - name: Get disk information
@@ -44,12 +41,12 @@
 
 - name: Debug Integration Services vars
   ansible.builtin.debug:
-    var: rl_mssql_install_ssisdb
+    var: sql_install_install_ssisdb
 
 - name: Create the Integration Services Catalog
   ansible.builtin.include_tasks: integrationservicescatalog.yml
   when:
-    - rl_mssql_install_ssisdb == "true"
+    - sql_install_install_ssisdb == "true"
   tags: create-ssisdb
 
 - name: Enable database mail and create the default account

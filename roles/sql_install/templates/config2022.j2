@@ -35,7 +35,7 @@ QUIETSIMPLE="False"
 
 ; Specify whether SQL Server Setup should discover and include product updates. The valid values are True and False or 1 and 0. By default SQL Server Setup will include updates that are found. 
 
-UpdateEnabled={{'"' + rl_mssql_enableupdates + '"'}}
+UpdateEnabled={{'"' + sql_install_enableupdates + '"'}}
 
 ; If this parameter is provided, then this computer will use Microsoft Update to check for updates. 
 
@@ -47,14 +47,14 @@ SUPPRESSPAIDEDITIONNOTICE="True"
 
 ; Specify the location where SQL Server Setup will obtain product updates. The valid values are "MU" to search Microsoft Update, a valid folder path, a relative path such as .\MyUpdates or a UNC share. By default SQL Server Setup will search Microsoft Update or a Windows Update service through the Window Server Update Services. 
 
-{% if rl_mssql_enableupdates.lower() == "true" -%}
-UpdateSource={{'"' + rl_mssql_temp_folder + '\\updates' + '"'}}
+{% if sql_install_enableupdates.lower() == "true" -%}
+UpdateSource={{'"' + sql_install_temp_folder + '\\updates' + '"'}}
 {%- endif %}
 
 
 ; Specifies features to install, uninstall, or upgrade. The list of top-level features include SQL, AS, IS, MDS, and Tools. The SQL feature will install the Database Engine, Replication, Full-Text, and Data Quality Services (DQS) server. The Tools feature will install shared components. 
 
-FEATURES={{ rl_mssql_features }}
+FEATURES={{ sql_install_features }}
 
 ; Displays the command line parameters usage. 
 
@@ -66,19 +66,19 @@ INDICATEPROGRESS="False"
 
 ; Specify a default or named instance. MSSQLSERVER is the default instance for non-Express editions and SQLExpress for Express editions. This parameter is required when installing the SQL Server Database Engine (SQL), or Analysis Services (AS). 
 
-INSTANCENAME={{'"' + rl_mssql_instance_name + '"'}}
+INSTANCENAME={{'"' + sql_install_instance_name + '"'}}
 
 ; Specify the root installation directory for shared components.  This directory remains unchanged after shared components are already installed. 
 
-INSTALLSHAREDDIR={{'"' + rl_mssql_installshareddir + '"' }}
+INSTALLSHAREDDIR={{'"' + sql_install_installshareddir + '"' }}
 
 ; Specify the root installation directory for the WOW64 shared components.  This directory remains unchanged after WOW64 shared components are already installed. 
 
-INSTALLSHAREDWOWDIR={{'"' + rl_mssql_installsharedwowdir + '"'}}
+INSTALLSHAREDWOWDIR={{'"' + sql_install_installsharedwowdir + '"'}}
 
 ; Specify the Instance ID for the SQL Server features you have specified. SQL Server directory structure, registry structure, and service names will incorporate the instance ID of the SQL Server instance. 
 
-INSTANCEID={{'"' + rl_mssql_instance_name + '"'}}
+INSTANCEID={{'"' + sql_install_instance_name + '"'}}
 
 ; Startup type for the SQL Server CEIP service. 
 
@@ -90,14 +90,14 @@ SQLTELSVCSTARTUPTYPE="Automatic"
 
 ; Specify the installation directory. 
 
-INSTANCEDIR={{'"' + rl_mssql_instance_dir + '"'}}
+INSTANCEDIR={{'"' + sql_install_instance_dir + '"'}}
 
 ; Agent account name 
 
-{% if rl_mssql_svcagentpassword or "$" in rl_mssql_svcagentaccount -%}
+{% if sql_install_svcagentpassword or "$" in sql_install_svcagentaccount -%}
 ; Agent account name 
 
-AGTSVCACCOUNT={{'"' + rl_mssql_svcagentaccount + '"'}}
+AGTSVCACCOUNT={{'"' + sql_install_svcagentaccount + '"'}}
 
 {%- endif %}
 
@@ -134,13 +134,13 @@ BROWSERSVCSTARTUPTYPE="Disabled"
 ISTELSVCSTARTUPTYPE="Automatic"
 
 
-{% if 'IS' in rl_mssql_features  -%}
+{% if 'IS' in sql_install_features  -%}
 ; Startup type for Integration Services. 
 
 ISSVCSTARTUPTYPE="AUTOMATIC"
 
 ; Account for Integration Services: Domain\User or system account. 
-ISSVCACCOUNT={{'"' + rl_mssql_issvcaccount + '"'}}
+ISSVCACCOUNT={{'"' + sql_install_issvcaccount + '"'}}
 {%- endif %}
 
 ; Level to enable FILESTREAM feature at (0, 1, 2 or 3). 
@@ -157,20 +157,20 @@ ENABLERANU="False"
 
 ; Specifies a Windows collation or an SQL collation to use for the Database Engine. 
 
-SQLCOLLATION={{'"' + rl_mssql_sqlcollation + '"'}}
+SQLCOLLATION={{'"' + sql_install_sqlcollation + '"'}}
 
-{% if rl_mssql_svcpassword or "$" in rl_mssql_svcaccount -%}
+{% if sql_install_svcpassword or "$" in sql_install_svcaccount -%}
 ; Account for SQL Server service: Domain\User or system account. 
 
-SQLSVCACCOUNT={{'"' + rl_mssql_svcaccount + '"'}}
+SQLSVCACCOUNT={{'"' + sql_install_svcaccount + '"'}}
 
 {%- endif %}
 
-SQLSVCINSTANTFILEINIT={{'"' + rl_mssql_sqlsvcinstantfileinit + '"'}}
+SQLSVCINSTANTFILEINIT={{'"' + sql_install_sqlsvcinstantfileinit + '"'}}
 
 ; Windows account(s) to provision as SQL Server system administrators. 
 
-SQLSYSADMINACCOUNTS={{'"' + rl_mssql_sysadminaccount + '"'}}
+SQLSYSADMINACCOUNTS={{'"' + sql_install_sysadminaccount + '"'}}
 
 ; The default is Windows Authentication. Use "SQL" for Mixed Mode Authentication. 
 
@@ -178,47 +178,47 @@ SECURITYMODE="SQL"
 
 ; The number of Database Engine TempDB files. 
 
-SQLTEMPDBFILECOUNT= {{ rl_mssql_tempdbfilecount }}
+SQLTEMPDBFILECOUNT= {{ sql_install_tempdbfilecount }}
 
 ; Specifies the initial size of a Database Engine TempDB data file in MB. 
 
-SQLTEMPDBFILESIZE={{ rl_mssql_tempdbfilesize  }}
+SQLTEMPDBFILESIZE={{ sql_install_tempdbfilesize  }}
 
 ; Specifies the automatic growth increment of each Database Engine TempDB data file in MB. 
 
-SQLTEMPDBFILEGROWTH={{ rl_mssql_tempdbfilegrowth }}
+SQLTEMPDBFILEGROWTH={{ sql_install_tempdbfilegrowth }}
 
 ; Specifies the initial size of the Database Engine TempDB log file in MB. 
 
-SQLTEMPDBLOGFILESIZE={{ rl_mssql_tempdblogfilesize }}
+SQLTEMPDBLOGFILESIZE={{ sql_install_tempdblogfilesize }}
 
 ; Specifies the automatic growth increment of the Database Engine TempDB log file in MB. 
 
-SQLTEMPDBLOGFILEGROWTH={{ rl_mssql_tempdblogfilegrowth }}
+SQLTEMPDBLOGFILEGROWTH={{ sql_install_tempdblogfilegrowth }}
 
 ; Directories for Database Engine TempDB files. 
 
-SQLTEMPDBDIR={{'"' + rl_mssql_tempdb_path + '"'}}
+SQLTEMPDBDIR={{'"' + sql_install_tempdb_path + '"'}}
 
-SQLTEMPDBLOGDIR={{'"' + rl_mssql_tempdblog_path + '"'}}
+SQLTEMPDBLOGDIR={{'"' + sql_install_tempdblog_path + '"'}}
 
 ; Provision current user as a Database Engine system administrator for SQL Server 2022 Express. 
 
 ; The Database Engine root data directory. 
 
-INSTALLSQLDATADIR={{'"' + rl_mssql_installdb_path + '"'}}
+INSTALLSQLDATADIR={{'"' + sql_install_installdb_path + '"'}}
 
 ; Default directory for the Database Engine backup files. 
 
-SQLBACKUPDIR={{'"' + rl_mssql_backup_path + '"'}}
+SQLBACKUPDIR={{'"' + sql_install_backup_path + '"'}}
 
 ; Default directory for the Database Engine user databases. 
 
-SQLUSERDBDIR={{'"' + rl_mssql_userdb_path + '"'}}
+SQLUSERDBDIR={{'"' + sql_install_userdb_path + '"'}}
 
 ; Default directory for the Database Engine user database logs. 
 
-SQLUSERDBLOGDIR={{'"' + rl_mssql_userdblog_path + '"'}}
+SQLUSERDBLOGDIR={{'"' + sql_install_userdblog_path + '"'}}
 
 ; Add description of input argument FTSVCACCOUNT 
 
