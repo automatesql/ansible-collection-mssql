@@ -118,12 +118,12 @@ Here is a basic example of how to use this role in a playbook. Create a host inv
 
 ```yaml
 ---
-- name: Install SQL Server using mssql role
+- name: Install SQL Server using sql_install role
   hosts: sqlservers
   gather_facts: true
 
   tasks:
-    - name: Import the mssql role
+    - name: Import the sql_install role
       ansible.builtin.import_role:
         name: automatesql.mssql.sql_install
 ```
