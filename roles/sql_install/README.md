@@ -13,7 +13,7 @@ This role can perform the following actions:
 
 ### **Want to Become an Expert?**
 
-This collection provides the tools to manage SQL Server. My comprehensive video course teaches you the advanced patterns and best practices to use it. You'll get access to advanced playbooks, the inventory file examples, and access to the the AutomateSQL Insiders Community to help you master SQL Server automation.
+This collection provides the tools to manage SQL Server. My comprehensive course teaches you the advanced patterns and best practices to use it. You'll get access to advanced playbooks, the inventory file examples, and access to the the AutomateSQL Insiders Community to help you master SQL Server automation.
 
 **[Enroll in the Ansible for SQL Server DBAs course now!](https://www.automatesql.com/ansible)**
 
@@ -97,7 +97,6 @@ This role is highly configurable using the following variables.
 This role can deploy a powerful utility database that includes:
 * **Ola Hallengren's Maintenance Solution:** The industry standard for database backups, integrity checks, and index maintenance.
 * **Brent Ozar's First Responders Kit:** A suite of diagnostic scripts to help troubleshoot performance issues.
-* **sp_whoisactive:** A comprehensive activity monitoring stored procedure.
 
 The following SQL Server Agent jobs are deployed and configured as part of the maintenance solution:
 * Full, differential, and transaction log backups.
