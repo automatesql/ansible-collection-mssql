@@ -9,6 +9,8 @@ This role can perform the following actions:
 * Deploy a utility database containing industry-standard maintenance solutions.
 * Create and schedule essential SQL Server Agent jobs.
 
+> Currently written to support only default SQL Server instances.  Updates coming soon to support named instances.
+
 ---
 
 ### **Want to Become an Expert?**
