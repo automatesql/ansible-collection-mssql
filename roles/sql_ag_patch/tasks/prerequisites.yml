@@ -1,0 +1,110 @@
+---
+- name: Get stats of the patch executable to verify its checksum
+  ansible.windows.win_stat:
+    path: "{{ sql_patch_source }}{{ sql_patch_filename }}"
+    get_checksum: true
+    checksum_algorithm: sha256
+  register: patch_file_stat
+
+- name: Verify SHA256 checksum of the patch executable
+  ansible.builtin.assert:
+    that:
+      - "patch_file_stat.stat.checksum | lower == sql_patch_checksum | lower"
+    fail_msg: "Checksum mismatch for {{ sql_patch_filename }}. Expected '{{ sql_patch_checksum | lower }}' but got '{{ patch_file_stat.stat.checksum | lower }}'."
+    success_msg: "Checksum for {{ sql_patch_filename }} verified successfully."
+
+- name: Initialize fact for module installation tracking
+  ansible.builtin.set_fact:
+    sqlserver_module_was_installed_by_role: false
+
+- name: Check if SqlServer module is already installed
+  ansible.windows.win_powershell:
+    script: "Get-Module -ListAvailable -Name SqlServer"
+  register: sqlserver_module_check
+  changed_when: false
+  failed_when: false
+
+- name: Block for installing SqlServer module if not present
+  when: sqlserver_module_check.output | length == 0
+  block:
+    - name: Create a temporary directory for modules on the target
+      ansible.windows.win_file:
+        path: "{{ [sql_patch_temp_folder, 'Modules'] | path_join }}"
+        state: directory
+
+    - name: Copy SqlServer module to a temporary location on the target
+      ansible.windows.win_copy:
+        src: "{{ powershell_modules_path }}/SqlServer/"
+        dest: "{{ [sql_patch_temp_folder, 'Modules', 'SqlServer'] | path_join }}/"
+        remote_src: false
+
+    - name: Install SqlServer module from the temporary location
+      community.windows.win_psmodule:
+        name: SqlServer
+        path: "{{ [sql_patch_temp_folder, 'Modules', 'SqlServer', 'SqlServer.psd1'] | path_join }}"
+        state: present
+        accept_license: true
+        allow_clobber: true
+      register: sqlserver_module_install_result
+
+    - name: Set fact that we installed the module during this run
+      ansible.builtin.set_fact:
+        sqlserver_module_was_installed_by_role: true
+      when: sqlserver_module_install_result.changed
+
+# fact building.  Facts are used to ensure idemotency is enforced.
+- name: Set the server_instance variable conditionally
+  ansible.builtin.set_fact:
+    server_instance: "{% if 'DEFAULT' in sql_instance_name %}{{ ansible_hostname }}{% else %}{{ ansible_hostname }}\\{{ sql_instance_name }}{% endif %}"
+
+- name: Get current SQL Server version
+  ansible.windows.win_powershell:
+    script: "{{ lookup('file', 'get_sqlversion.ps1') }}"
+    parameters:
+      ServerInstance: "{{ server_instance }}"
+  register: sql_version_info
+
+- name: Set a fact for the version
+  ansible.builtin.set_fact:
+    current_sql_version: "{{ sql_version_info.output[0] }}"
+
+- name: Determine if patch is needed and check version compatibility
+  block:
+    - name: Compare current and desired SQL Server versions
+      ansible.builtin.set_fact:
+        is_patch_needed: "{{ current_sql_version is version(desired_sql_version, '<') }}"
+        is_major_version_match: "{{ current_sql_version.split('.')[0] == desired_sql_version.split('.')[0] }}"
+
+    - name: Assert SQL Server version is valid for patching
+      ansible.builtin.assert:
+        that:
+          - is_major_version_match
+          - current_sql_version is version(desired_sql_version, '<=')
+        fail_msg: >-
+          Patching is not possible. SQL Server version mismatch detected:
+          - **Current Version:** {{ current_sql_version }}
+          - **Desired Version:** {{ desired_sql_version }}
+          {% if not is_major_version_match %}
+          - **Major version mismatch!** The patch cannot be applied across major SQL Server versions.
+          {% else %}
+          - **Patch version too high!** The patch is designed for an older version than what is installed.
+          {% endif %}
+        success_msg: "SQL Server version check passed."
+
+- name: Initialize fact for new_primary with default
+  ansible.builtin.set_fact:
+    new_primary: "default_value"
+
+# Most of the PowerShell commandlets used in this role use PowerShell paths which require DEFAULT as the instance name for default instances.
+# However, the patch exe expects the instance name to be MSSQLSERVER if we're patching the default instance.  So we need another fact to handle this.
+- name: Set a fact for the instance name to patch
+  ansible.builtin.set_fact:
+    sql_instance_name_to_patch: "{% if 'DEFAULT' in sql_instance_name %}MSSQLSERVER{% else %}{{ sql_instance_name }}{% endif %}"
+
+# Only run this block if the patch is needed.
+- name: Copy update to managed node
+  ansible.windows.win_copy:
+    src: "{{ sql_patch_source }}{{ sql_patch_filename }}"
+    dest: "{{ sql_patch_temp_folder }}\\updates\\"
+    remote_src: true
+  when: is_patch_needed

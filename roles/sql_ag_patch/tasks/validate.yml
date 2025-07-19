@@ -1,0 +1,78 @@
+---
+# This task runs ONLY during the pre-validation call from main.yml
+- name: Pre-patch | Check that the AG is in a healthy state
+  when: not post_validation | bool
+  block:
+    - name: Get AG state
+      ansible.windows.win_powershell:
+        script: "{{ lookup('file', 'get_ag_health.ps1') }}"
+        parameters:
+          SqlInstanceName: "{{ sql_instance_name }}"
+          AgName: "{{ ag_name }}"
+      register: validation_result
+      delay: 30
+      retries: 4
+      until: validation_result.output[0] == "Healthy"
+
+    - name: Verify the AG is in a healthy state
+      ansible.builtin.assert:
+        that:
+          - validation_result.output[0] == "Healthy"
+        fail_msg: >-
+          Review the {{ ag_name }} availability group state.  Current state is {{ validation_result.output[0] }}.
+        success_msg: >-
+          "Pre-check OK: {{ ag_name }} is {{ validation_result.output[0] }}."
+
+
+# This block runs ONLY during the post-validation call from main.yml
+- name: Post-patch | Validate final state of all nodes and the AG
+  when: post_validation | bool
+  block:
+    - name: Check AG state on the current primary replica
+      when: (sql_ag_failback | bool and ag_current_primary == server_instance) or (not sql_ag_failback | bool and new_primary == server_instance)
+      block:
+        - name: Get AG state after patching
+          ansible.windows.win_powershell:
+            script: "{{ lookup('file', 'get_ag_health.ps1') }}"
+            parameters:
+              SqlInstanceName: "{{ sql_instance_name }}"
+              AgName: "{{ ag_name }}"
+          register: post_validation_result
+          delay: 30
+          retries: 4
+          until: post_validation_result.output[0] == "Healthy"
+
+        - name: Verify the AG is in a healthy state after patching
+          ansible.builtin.assert:
+            that:
+              - post_validation_result.output[0] == "Healthy"
+            fail_msg: >-
+              Review the {{ ag_name }} availability group state.  Current state is {{ post_validation_result.output[0] }}.
+            success_msg: >-
+              "Post-check OK: {{ ag_name }} is {{ post_validation_result.output[0] }}."
+
+    - name: Get final SQL Server version on this node
+      ansible.windows.win_powershell:
+        script: "{{ lookup('file', 'get_sqlversion.ps1') }}"
+        parameters:
+          ServerInstance: "{{ server_instance }}"
+      register: final_sql_version_info
+
+    - name: Verify the final version on this node equals the desired version
+      ansible.builtin.assert:
+        that: >-
+          (final_sql_version_info.output[0] == desired_sql_version) or
+          (
+            ((sql_ag_failback | bool and ag_current_primary == server_instance) or
+             (not sql_ag_failback | bool and new_primary == server_instance)) and
+            not (patch_primary | bool)
+          )
+        fail_msg: >-
+          Review the {{ server_instance }} instance. Expected version: {{ desired_sql_version }}. Final version: {{ final_sql_version_info.output[0] }}
+        success_msg: >-
+          {% if ((sql_ag_failback | bool and ag_current_primary == server_instance) or (not sql_ag_failback | bool and new_primary == server_instance)) and not (patch_primary
+          | bool) %}
+            {{ server_instance }} is the primary replica and was skipped for patching. Current version: {{ final_sql_version_info.output[0] }}
+          {% else %}
+            {{ server_instance }} has been patched to the desired version: {{ final_sql_version_info.output[0] }}
+          {% endif %}
