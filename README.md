@@ -67,9 +67,11 @@ This playbook uses the `sql_ag_patch` role to apply updates to an existing Avail
     sql_patch_filename: "SQLServer2019-KB5011644-x64.exe"
     sql_patch_checksum: "a1b2c3d4..." # Replace with actual checksum
     powershell_modules_path: "../"
-
-  roles:
-    - role: automatesql.mssql.sql_ag_patch
+  
+  tasks: 
+    - name: Import the sql_ag_patch role
+      ansible.builtin.import_role:
+        name: automatesql.mssql.sql_install  
 ```
 
 ## License
