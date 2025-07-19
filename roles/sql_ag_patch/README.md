@@ -1,4 +1,4 @@
-# Ansible Role: SQL Server AG Patcher
+# Ansible Role: SQL Server Availability Group Patcher
 
 This role performs a rolling patch update on SQL Server instances that are part of an Availability Group (AG). It is designed to be idempotent and resilient, ensuring a safe and predictable patching process with minimal downtime.  
 
@@ -107,11 +107,22 @@ The following variables can be defined to control the role's behavior.
 ## Example Playbook
 
 ```yaml
+---
 - name: Patch SQL Server Availability Group
-  hosts: all_sql_servers
+  hosts: sqlservers
   gather_facts: true
 
-  roles:
-    - role: sql_ag_patch
-
+  vars:
+    ag_name: "My-AG"
+    desired_sql_version: "15.0.4223.1"
+    sql_instance_name: "DEFAULT"
+    sql_patch_source: "//FileServer/SQL_Updates/"
+    sql_patch_filename: "SQLServer2019-KB5011644-x64.exe"
+    sql_patch_checksum: "a1b2c3d4..." # Replace with actual checksum
+    powershell_modules_path: "../"
+  
+  tasks: 
+    - name: Import the sql_ag_patch role
+      ansible.builtin.import_role:
+        name: automatesql.mssql.sql_install  
 ```
