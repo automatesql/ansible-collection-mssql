@@ -75,11 +75,22 @@
         is_patch_needed: "{{ current_sql_version is version(desired_sql_version, '<') }}"
         is_major_version_match: "{{ current_sql_version.split('.')[0] == desired_sql_version.split('.')[0] }}"
 
+    - name: End play for this host if it is already at the desired version
+      when: current_sql_version == desired_sql_version
+      block:
+        - name: Report that the instance is already patched and notify for cleanup
+          ansible.builtin.debug:
+            msg: "Skipping patch. SQL Server on {{ server_instance }} is already at the desired version ({{ desired_sql_version }})."
+          notify: Uninstall SqlServer module on failure
+
+        - name: End play for host
+          ansible.builtin.meta: end_host
+
     - name: Assert SQL Server version is valid for patching
       ansible.builtin.assert:
         that:
           - is_major_version_match
-          - current_sql_version is version(desired_sql_version, '<=')
+          - current_sql_version is version(desired_sql_version, '<')
         fail_msg: >-
           Patching is not possible. SQL Server version mismatch detected:
           - **Current Version:** {{ current_sql_version }}
@@ -105,6 +116,7 @@
 - name: Copy update to managed node
   ansible.windows.win_copy:
     src: "{{ sql_patch_source }}{{ sql_patch_filename }}"
-    dest: "{{ sql_patch_temp_folder }}\\updates\\"
+    dest: "{{ sql_patch_temp_folder }}/updates/"
     remote_src: true
   when: is_patch_needed
+  notify: Cleanup temporary files

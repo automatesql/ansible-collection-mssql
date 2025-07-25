@@ -56,10 +56,4 @@
   vars:
     post_validation: true
 
-# Cleanup temporary patch files.
-# This runs only if the current version matches the desired version,
-# implying a successful patch. On failure, files are left for debugging.
-- name: Cleanup temporary files
-  ansible.builtin.include_tasks: cleanup.yml
-  when:
-    - final_sql_version_info.output[0] == desired_sql_version
+

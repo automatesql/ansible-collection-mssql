@@ -19,15 +19,23 @@
       register: change_failover_result
       failed_when: not (change_failover_result.result.Success | default(false))
 
-    - name: Check for pending reboot before applying patches
+    - name: Check for pending reboots in common registry locations
       ansible.windows.win_reg_stat:
-        path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired
-      register: pending_wu_reboot
+        path: "{{ item }}"
+      loop:
+        - HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired
+        - HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending
+      register: pending_reboot_checks
+
+    - name: Set fact with any pending reboots found
+      ansible.builtin.set_fact:
+        reboot_is_pending: "{{ pending_reboot_checks.results | selectattr('exists') | list }}"
 
     - name: Fail if a reboot is pending before patching
       ansible.builtin.fail:
-        msg: "A pending reboot is required on {{ ansible_hostname }} before patching can continue. Please reboot and try again."
-      when: pending_wu_reboot.exists
+        msg: "A pending reboot is required on {{ server_instance }} due to key '{{ (reboot_is_pending | first).item }}'. Please reboot and try again."
+      when: reboot_is_pending | length > 0
+      notify: Uninstall SqlServer module on failure
 
     - name: Install SQL Updates on secondaries
       ansible.windows.win_package:
