@@ -1,0 +1,73 @@
+---
+- name: Set SQL Server Max Memory
+  ansible.windows.win_dsc:
+    resource_name: SqlMemory
+    Ensure: "Present"
+    DynamicAlloc: true
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+
+- name: Set SQL Server instance maxdop
+  ansible.windows.win_dsc:
+    resource_name: SQLMaxDop
+    DynamicAlloc: true
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+
+- name: Set backup compression
+  ansible.windows.win_dsc:
+    resource_name: SQLConfiguration
+    OptionName: "backup compression default"
+    OptionValue: 1
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+
+- name: Set SQL Server instance cost threshold for parallelism
+  ansible.windows.win_dsc:
+    resource_name: SQLConfiguration
+    OptionName: "cost threshold for parallelism"
+    OptionValue: 50
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+
+- name: Set SQL Server instance port
+  ansible.windows.win_dsc:
+    resource_name: SqlProtocolTcpIp
+    IpAddressGroup: "IPAll"
+    Enabled: true
+    SuppressRestart: false
+    TCPPort: "{{ sql_install_instance_port }}"
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+
+- name: Set SQL Server instance number of error logs to 30
+  ansible.windows.win_dsc:
+    resource_name: SqlScript
+    Id: "SetMaxNumErrorLogs"
+    SetFilePath: "{{ sql_install_temp_folder }}\\Set-NumErrorLogs.sql"
+    GetFilePath: "{{ sql_install_temp_folder }}\\Get-NumErrorLogs.sql"
+    TestFilePath: "{{ sql_install_temp_folder }}\\Test-NumErrorLogs.sql"
+    QueryTimeout: 600
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+    Encrypt: "Optional"
+
+- name: Set SQL Server agent job history max rows to unlimited
+  ansible.windows.win_dsc:
+    resource_name: SqlScript
+    Id: "SetJobHistoryMaxRows"
+    SetFilePath: "{{ sql_install_temp_folder }}\\Set-JobHistoryMaxRows.sql"
+    GetFilePath: "{{ sql_install_temp_folder }}\\Get-JobHistoryMaxRows.sql"
+    TestFilePath: "{{ sql_install_temp_folder }}\\Test-JobHistoryMaxRows.sql"
+    QueryTimeout: 600
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+    Encrypt: "Optional"
+
+- name: Add trace flag 3226
+  ansible.windows.win_dsc:
+    resource_name: SqlTraceFlag
+    ServerName: "localhost"
+    InstanceName: "{{ sql_install_instance_name }}"
+    TraceFlagsToInclude: "3226"
+    RestartService: true

@@ -1,0 +1,85 @@
+---
+# This set of tasks patches a secondary replica in a SQL Server Availability Group.
+# It temporarily sets the failover mode to manual to prevent an unintended failover during the patching process.
+
+- name: Patch secondary replicas block - only run if version mismatch
+  when:
+    - is_patch_needed
+  block:
+    - name: Set secondary replica failover mode to Manual to prevent failover during patching
+      ansible.windows.win_powershell:
+        script: "{{ lookup('file', 'change_failover_mode.ps1') }}"
+        parameters:
+          SqlInstanceName: "{{ sql_instance_name }}"
+          AgName: "{{ ag_name }}"
+          AgCurrentPrimary: "{{ ag_current_primary }}"
+          NewPrimary: "{{ new_primary }}" # If the primary has changed, we'll need to connect to it vs AgCurrentPrimary
+          HostName: "{{ ansible_hostname }}"
+          TargetMode: "Manual" # Use "Manual" or "Automatic" as needed
+      register: change_failover_result
+      failed_when: not (change_failover_result.result.Success | default(false))
+
+    - name: Check for pending reboots in common registry locations
+      ansible.windows.win_reg_stat:
+        path: "{{ item }}"
+      loop:
+        - HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired
+        - HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending
+      register: pending_reboot_checks
+
+    - name: Set fact with any pending reboots found
+      ansible.builtin.set_fact:
+        reboot_is_pending: "{{ pending_reboot_checks.results | selectattr('exists') | list }}"
+
+    - name: Fail if a reboot is pending before patching
+      ansible.builtin.fail:
+        msg: "A pending reboot is required on {{ server_instance }} due to key '{{ (reboot_is_pending | first).item }}'. Please reboot and try again."
+      when: reboot_is_pending | length > 0
+      notify: Uninstall SqlServer module on failure
+
+    - name: Install SQL Updates on secondaries
+      ansible.windows.win_package:
+        path: "{{ [sql_patch_temp_folder, 'updates', sql_patch_filename] | path_join }}"
+        arguments: "{{ sql_patch_args }}"
+        state: present
+      register: patch_out
+
+    - name: Reboot
+      ansible.windows.win_reboot:
+        reboot_timeout: "{{ sql_reboot_timeout }}"
+      when:
+        - reboot_secondary
+
+    - name: Wait for SQL Server to become available.
+      ansible.windows.win_wait_for:
+        port: "{{ sql_port }}"
+        delay: 10
+        timeout: 600
+
+    - name: Get new SQL Server version after patch
+      ansible.windows.win_powershell:
+        script: "{{ lookup('file', 'get_sqlversion.ps1') }}"
+        parameters:
+          ServerInstance: "{{ server_instance }}"
+      register: new_sql_version_info
+
+    - name: Verify SQL Server version was updated successfully
+      ansible.builtin.assert:
+        that:
+          - "new_sql_version_info.output[0] == desired_sql_version"
+        fail_msg: "SQL Server on {{ ansible_hostname }} was not updated to the expected version {{ desired_sql_version }}. Current version is {{ new_sql_version_info.output[0]
+          }}."
+        success_msg: "The SQL Server instance {{ server_instance }} successfully updated to {{ desired_sql_version }}."
+
+  always:
+    - name: Restore secondary replica failover mode to Automatic if it was changed
+      ansible.windows.win_powershell:
+        script: "{{ lookup('file', 'change_failover_mode.ps1') }}"
+        parameters:
+          SqlInstanceName: "{{ sql_instance_name }}"
+          AgName: "{{ ag_name }}"
+          AgCurrentPrimary: "{{ ag_current_primary }}"
+          NewPrimary: "{{ new_primary }}"
+          HostName: "{{ ansible_hostname }}"
+          TargetMode: "Automatic" # Use "Manual" or "Automatic" as needed
+      when: change_failover_result.result.Changed | default(false)

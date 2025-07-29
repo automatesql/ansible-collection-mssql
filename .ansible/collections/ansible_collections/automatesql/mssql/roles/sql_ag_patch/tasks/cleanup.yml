@@ -1,0 +1,13 @@
+---
+- name: Delete source files
+  ansible.windows.win_file:
+    path: "{{ sql_patch_temp_folder }}"
+    state: absent
+
+- name: Uninstall the SqlServer PowerShell module if required
+  community.windows.win_psmodule:
+    name: SqlServer
+    state: absent
+  when:
+    - remove_sqlserver_module
+    - sqlserver_module_was_installed_by_role

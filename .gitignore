@@ -1,1 +1,7 @@
 *.tar.gz
+0_playbook_installpsmodules.yml
+5_playbook_installmssql.yml
+hosts.ini
+ansible.cfg
+/group_vars
+/host_vars

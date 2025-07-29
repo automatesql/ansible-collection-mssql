@@ -1,0 +1,78 @@
+---
+# tasks file for mssql
+# Set a fact for the SQL Server version being installed"
+- name: Set SQL Server version fact
+  ansible.builtin.set_fact:
+    sql_install_version: "{{ sql_install_iso_source[0].version }}"
+
+- name: Print SQL Server version
+  ansible.builtin.debug:
+    msg: "Installing SQL Server version: {{ sql_install_version }}"
+
+- name: Partition and Format disks
+  ansible.builtin.include_tasks: diskPrep.yml
+  when:
+    - sql_install_prep_disks == "true"
+  tags: diskprep
+
+- name: Get disk information
+  ansible.builtin.include_tasks: diskverify.yml
+  tags: diskverify
+
+- name: Prerequisites
+  ansible.builtin.include_tasks: prerequisites.yml
+  tags: prereq
+
+- name: Mount ISO
+  ansible.builtin.include_tasks: isoMount.yml
+  when:
+    - not service_info.exists
+  tags: iso
+
+- name: Install SQL Server
+  ansible.builtin.include_tasks: install.yml
+  when:
+    - not service_info.exists
+  tags: install
+
+- name: Configure SQL Server
+  ansible.builtin.include_tasks: config.yml
+  tags: config
+
+- name: Create standard databases
+  ansible.builtin.include_tasks: databases.yml
+  tags: create-standard-databases
+
+- name: Debug Integration Services vars
+  ansible.builtin.debug:
+    var: sql_install_install_ssisdb
+
+- name: Create the Integration Services Catalog
+  ansible.builtin.include_tasks: integrationservicescatalog.yml
+  when:
+    - sql_install_install_ssisdb == "true"
+  tags: create-ssisdb
+
+- name: Enable database mail and create the default account
+  ansible.builtin.include_tasks: databasemail.yml
+  tags: enable-database-mail
+
+- name: Create the DBATeam operator (set to a bogus email address for now)
+  ansible.builtin.include_tasks: sqlagentfailsafeoperators.yml
+  tags: create-dbateam-operator
+
+- name: Create standard maintenance jobs
+  ansible.builtin.include_tasks: sqlagentjobs.yml
+  tags: create-standard-maintenance-jobs
+
+- name: Add firewall rule
+  ansible.builtin.include_tasks: firewallrule.yml
+  tags: firewall
+
+- name: Dismount ISO
+  ansible.builtin.include_tasks: isoDismount.yml
+  when:
+    - not service_info.exists
+
+- name: Cleanup files
+  ansible.builtin.include_tasks: cleanup.yml

@@ -1,0 +1,24 @@
+---
+- name: "Check for existing module: {{ module_item }}"
+  ansible.windows.win_powershell:
+    script: "Get-Module -ListAvailable -Name {{ module_item }}"
+  register: module_check
+  changed_when: false
+  failed_when: false
+
+- name: "Install missing module: {{ module_item }}"
+  when: module_check.output | length == 0
+  block:
+    - name: "Copy module files to temporary location: {{ module_item }}"
+      ansible.windows.win_copy:
+        src: "{{ module_item }}/"
+        dest: "{{ manage_powershell_modules_temp_folder }}/{{ module_item }}/"
+        remote_src: false
+
+    - name: "Install module from path: {{ module_item }}"
+      community.windows.win_psmodule:
+        name: "{{ module_item }}"
+        path: "{{ manage_powershell_modules_temp_folder }}/{{ module_item }}/{{ module_item }}.psd1"
+        state: present
+        accept_license: true
+        allow_clobber: true

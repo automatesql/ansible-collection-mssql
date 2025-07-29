@@ -3,7 +3,70 @@
   ansible.builtin.set_fact:
     sa_password_switch: "{{ '/SAPWD={{ sql_install_sapwd }}' }}"
 
-- name: Install instance
-  ansible.windows.win_command:
-    cmd: "{{ disk_image_out.results[0].mount_paths[0] }}setup.exe /ConfigurationFile={{ sql_install_temp_folder }}\\Configuration.ini {{ sa_password_switch }}"
+- name: Set UpdateSource variable if updates are enabled
+  ansible.builtin.set_fact:
+    sql_install_update_source_path: "{{ sql_install_temp_folder }}/updates"
+  when: sql_install_enableupdates.lower() == "true"
+
+- name: Set AgtSvcAccount variable if agent password or account contains '$'
+  ansible.builtin.set_fact:
+    sql_install_agent_svc_account: "{{ sql_install_svcagentaccount }}"
+  when: sql_install_svcagentpassword is defined or sql_install_svcagentaccount is search('\\$')
+
+- name: Set SQLSvcAccount variable if service password or account contains '$'
+  ansible.builtin.set_fact:
+    sql_install_sql_svc_account: "{{ sql_install_svcaccount }}"
+  when: sql_install_svcpassword is defined or sql_install_svcaccount is search('\\$')
+
+- name: Set ProductKey variable
+  ansible.builtin.set_fact:
+    sql_install_product_key: >-
+      {{ {
+        'Standard Developer': '33333-00000-00000-00000-00000',
+        'Enterprise Developer': '22222-00000-00000-00000-00000'
+      }.get(sql_install_edition, '00000-00000-00000-00000-00000') }}
+
+- name: Return the ProductKey variable
+  ansible.builtin.debug:
+    msg: "Product Key: {{ sql_install_product_key | string }}"
+
+- name: Install SQL Server using SqlSetup DSC resource
+  ansible.windows.win_dsc:
+    resource_name: SQLSetup
+    Action: Install
+    UpdateEnabled: "{{ sql_install_enableupdates }}"
+    SourcePath: "{{ disk_image_out.results[0].mount_paths[0] }}"
+    InstanceName: "{{ sql_install_instance_name }}"
+    InstallSharedDir: "{{ sql_install_installshareddir }}"
+    InstallSharedwowDir: "{{ sql_install_installsharedwowdir }}"
+    InstanceDir: "{{ sql_install_instance_dir }}"
+    InstallSQLDataDir: "{{ sql_install_installdb_path }}"
+    SQLBackupDir: "{{ sql_install_backup_path }}"
+    SQLUserDBDir: "{{ sql_install_userdb_path }}"
+    SQLUserDBLogDir: "{{ sql_install_userdblog_path }}"
+    Features: "{{ sql_install_features }}"
+    SQLCollation: "{{ sql_install_sqlcollation }}"
+    SQLSysAdminAccounts: "{{ sql_install_sysadminaccount }}"
+    SAPwd_username: "sa"
+    SAPwd_password: "{{ sql_install_sapwd }}"
+    SecurityMode: SQL
+    SQLTempDBFileCount: "{{ sql_install_tempdbfilecount }}"
+    SQLTempDBFileSize: "{{ sql_install_tempdbfilesize }}"
+    SQLTempDBFileGrowth: "{{ sql_install_tempdbfilegrowth }}"
+    SQLTempDBLogFileSize: "{{ sql_install_tempdblogfilesize }}"
+    SQLTempDBLogFileGrowth: "{{ sql_install_tempdblogfilegrowth }}"
+    SQLTempDBDir: "{{ sql_install_tempdb_path }}"
+    SQLTempDBLogDir: "{{ sql_install_tempdblog_path }}"
+    ProductKey: "{{ sql_install_product_key | string }}"
+    UpdateSource: "{{ sql_install_update_source_path | default(omit) }}"
+    # AgtSvcAccount_username: "{{ sql_install_agent_svc_account | default(omit) }}"
+    # SQLSvcAccount_username: "{{ sql_install_sql_svc_account | default(omit) }}"
+    SQLSvcStartupType: Automatic
+    AgtSvcStartupType: Automatic
+    SuppressReboot: true
+  register: sql_install_result
   # no_log: true
+
+- name: Return Installation result
+  ansible.builtin.debug:
+    msg: "SQL Install Result: {{ sql_install_result }}"

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coreProperties xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.openxmlformats.org/package/2006/metadata/core-properties">
+  <dc:creator>DSC Community</dc:creator>
+  <dc:description>This module contains commands and DSC resources for deployment and configuration of Microsoft SQL Server, SQL Server Reporting Services and Power BI Report Server.</dc:description>
+  <dc:identifier>SqlServerDsc</dc:identifier>
+  <version>17.1.0</version>
+  <keywords>PSModule DesiredStateConfiguration DSC DSCResourceKit DSCResource SqlServer PowerBI ReportingServices ReportServer</keywords>
+  <lastModifiedBy>NuGet.Packaging, Version=6.9.1.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35;Unix 6.11.0.1014;.NET Framework 4.7.2</lastModifiedBy>
+</coreProperties>

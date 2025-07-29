@@ -1,0 +1,7 @@
+---
+manage_powershell_modules_to_install:
+  - SqlServerDsc
+  - SqlServer
+
+manage_powershell_modules_path: "C:/Program Files/WindowsPowerShell/Modules"
+manage_powershell_modules_temp_folder: C:/temp/modules
