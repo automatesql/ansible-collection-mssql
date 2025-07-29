@@ -5,3 +5,4 @@ hosts.ini
 ansible.cfg
 /group_vars
 /host_vars
+*.nvm
