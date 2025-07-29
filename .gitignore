@@ -6,3 +6,5 @@ ansible.cfg
 /group_vars
 /host_vars
 *.nvm
+/roles/sql_install/tmp/*.*
+

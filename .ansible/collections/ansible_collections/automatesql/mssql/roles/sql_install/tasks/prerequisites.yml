@@ -1,8 +1,8 @@
 ---
-- name: Determine if the default instance exists.
-  ansible.windows.win_service:
-    name: "MSSQLSERVER"
-  register: service_info
+# - name: Determine if the default instance exists.
+#   ansible.windows.win_service:
+#     name: "MSSQLSERVER"
+#   register: service_info
 
 # - name: End play if default instance already exists.
 #   ansible.builtin.meta: end_play
@@ -11,8 +11,6 @@
 - name: Set power plan to high performance
   community.windows.win_power_plan:
     name: high performance
-
-
 
 - name: Create temp folder on target
   ansible.windows.win_file:
@@ -32,8 +30,8 @@
     dest: "{{ sql_install_temp_folder }}\\"
     remote_src: false
   loop: "{{ sql_install_iso_source }}"
-  when:
-    - not service_info.exists
+  # when:
+  #   - not service_info.exists
 
 - name: Copy SQL Server update
   ansible.windows.win_copy:
@@ -50,17 +48,23 @@
     dest: "{{ sql_install_temp_folder }}"
     remote_src: false
 
-- name: Generate configuration ini
-  ansible.builtin.template:
-    src: "{{ item.config }}"
-    dest: "{{ sql_install_temp_folder }}\\Configuration.ini"
-  loop: "{{ sql_install_iso_source }}"
+# - name: Generate configuration ini
+#   ansible.builtin.template:
+#     src: "{{ item.config }}"
+#     dest: "{{ sql_install_temp_folder }}\\Configuration.ini"
+#   loop: "{{ sql_install_iso_source }}"
 
 - name: Create an instance name variable that includes localhost.  Default instance.
   ansible.builtin.set_fact:
     instance_name_var: "localhost"
   when:
     - sql_install_instance_name == "MSSQLSERVER"
+
+- name: Create an instance name variable that includes localhost and instance name.
+  ansible.builtin.set_fact:
+    instance_name_var: 'localhost\{{ sql_install_instance_name }}'
+  when:
+    - sql_install_instance_name != "MSSQLSERVER"
 
 - name: Return instance_name_var
   ansible.builtin.debug:

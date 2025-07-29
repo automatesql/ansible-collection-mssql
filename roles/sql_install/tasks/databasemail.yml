@@ -1,7 +1,8 @@
 ---
 - name: Create the databasemail_display_name var
   ansible.builtin.set_fact:
-    databasemail_display_name: "{{ '{{ ansible_hostname }}' if sql_install_instance_name == 'MSSQLSERVER' else '{{ ansible_hostname }}\\{{ sql_install_instance_name }}'
+    databasemail_display_name: >-
+     "{{ '{{ ansible_hostname }}' if sql_install_instance_name == 'MSSQLSERVER' else '{{ ansible_hostname }}\\{{ sql_install_instance_name }}'
       }}"
 
 - name: Enable database mail

@@ -25,14 +25,14 @@
 
 - name: Mount ISO
   ansible.builtin.include_tasks: isoMount.yml
-  when:
-    - not service_info.exists
+  # when:
+  #   - not service_info.exists
   tags: iso
 
 - name: Install SQL Server
   ansible.builtin.include_tasks: install.yml
-  when:
-    - not service_info.exists
+  # when:
+  #   - not service_info.exists
   tags: install
 
 - name: Configure SQL Server
@@ -71,8 +71,8 @@
 
 - name: Dismount ISO
   ansible.builtin.include_tasks: isoDismount.yml
-  when:
-    - not service_info.exists
+  # when:
+  #   - not service_info.exists
 
 - name: Cleanup files
   ansible.builtin.include_tasks: cleanup.yml

@@ -26,4 +26,3 @@
       # Inject the entire script content, then call the function with all parameters.
       {{ ssis_script_content }}
       Set-SsisCatalog -InstanceName '{{ instance_name_var }}' -Password '{{ sql_install_ssisdb_password }}' -SqlVersion '{{ sql_install_version }}'
-

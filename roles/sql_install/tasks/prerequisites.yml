@@ -60,6 +60,12 @@
   when:
     - sql_install_instance_name == "MSSQLSERVER"
 
+- name: Create an instance name variable that includes localhost and instance name.
+  ansible.builtin.set_fact:
+    instance_name_var: 'localhost\{{ sql_install_instance_name }}'
+  when:
+    - sql_install_instance_name != "MSSQLSERVER"
+
 - name: Return instance_name_var
   ansible.builtin.debug:
     msg: "{{ instance_name_var }}"

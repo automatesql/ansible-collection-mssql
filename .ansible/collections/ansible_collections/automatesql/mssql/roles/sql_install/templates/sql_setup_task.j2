@@ -19,12 +19,14 @@
 
     # Service Accounts
 {% if sql_install_agent_svc_account is defined and sql_install_agent_svc_account is not none and sql_install_agent_svc_account | length > 0 %}
-    AgtSvcAccount_username: '{{ sql_install_agent_svc_account }}'
-    AgtSvcAccount_password: '{{ sql_install_agent_svc_password }}'
+    AgtSvcAccount: '{{ sql_install_agent_svc_account }}'
+    AgtSvcPassword_username: '{{ sql_install_agent_svc_account }}'
+    AgtSvcPassword_password: '{{ sql_install_agent_svc_password }}'
 {% endif %}
 {% if sql_install_sql_svc_account is defined and sql_install_sql_svc_account is not none and sql_install_sql_svc_account | length > 0 %}
-    SQLSvcAccount_username: '{{ sql_install_sql_svc_account }}'
-    SQLSvcAccount_password: '{{ sql_install_sql_svc_password }}'
+    SQLSvcAccount: '{{ sql_install_sql_svc_account }}'
+    SQLSvcPassword_username: '{{ sql_install_sql_svc_account }}'
+    SQLSvcPassword_password: '{{ sql_install_sql_svc_password }}'
 {% endif %}
     SQLSvcStartupType: '{{ sql_install_sql_svc_startup_type | default('Automatic') }}'
     AgtSvcStartupType: '{{ sql_install_agent_svc_startup_type | default('Automatic') }}'
@@ -53,4 +55,4 @@
     UpdateSource: '{{ sql_install_update_source_path | default(omit) }}'
 
   register: sql_install_result
-  no_log: false
+  no_log: true

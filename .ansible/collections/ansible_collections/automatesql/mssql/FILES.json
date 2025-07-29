@@ -22,6 +22,34 @@
    "format": 1
   },
   {
+   "name": "host_vars",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "host_vars/SQL3.SANDBOX.LOCAL.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "66ae1a9f51559d58bfd955fb0fce30cba2ba3408903cf18fc7565b961b5d923a",
+   "format": 1
+  },
+  {
+   "name": "host_vars/SQL2.SANDBOX.LOCAL.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "599abf60c229b43e9bdd13a4839cdd08048c4f1682da65054be47ca88bc5de29",
+   "format": 1
+  },
+  {
+   "name": "host_vars/SQL1.SANDBOX.LOCAL.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "3cc09affdde2030b02605f141bf5ae69ac2f3e6fc42382d2ffd5ffd099de1ed4",
+   "format": 1
+  },
+  {
    "name": "docs",
    "ftype": "dir",
    "chksum_type": null,
@@ -74,7 +102,7 @@
    "name": "roles/sql_install/defaults/main.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "eb7643c82f43e1eb7380234498bb9092d5d7e6a5ee19d692e5560ebdc63e855f",
+   "chksum_sha256": "a9140dc3a4525866109f54c23ff2b5e534c9379cb52c3c4821c6506fb05eda15",
    "format": 1
   },
   {
@@ -102,7 +130,7 @@
    "name": "roles/sql_install/tasks/prerequisites.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "3df1880c93f887784648f80a0877d85d9ad9db00b4dda140848df9ed67ffc541",
+   "chksum_sha256": "47f13823b6c1194dbdc8da0ab148436539e2076492efa6a466c85b607b3dff4d",
    "format": 1
   },
   {
@@ -144,7 +172,7 @@
    "name": "roles/sql_install/tasks/main.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "5b8e5f8d04a66c4ca4dc8de14cdf2e79e1d9dead0fd5c32d74a014dd5d19b6cb",
+   "chksum_sha256": "278d7cb2fba5d0371cd51affa27653ccd55dc306e41ea330051363819933cbce",
    "format": 1
   },
   {
@@ -179,7 +207,7 @@
    "name": "roles/sql_install/tasks/install.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "cd954bf768a624271cdb5ecd5ffcb37437a6ec8ebf4385c5f6bd3eaa82554d89",
+   "chksum_sha256": "299d361542f657d055eee9b3b401511374eff91b20bb0a21e3aa7dd095862550",
    "format": 1
   },
   {
@@ -295,6 +323,13 @@
    "format": 1
   },
   {
+   "name": "roles/sql_install/tmp",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
    "name": "roles/sql_install/vars",
    "ftype": "dir",
    "chksum_type": null,
@@ -376,6 +411,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "025ae20a7bb495a1cd32f7c29fdb3ef6d68c26f79b08e049b1640c79c00275f9",
+   "format": 1
+  },
+  {
+   "name": "roles/sql_install/templates/sql_setup_task.j2",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "ab8d96642d0c80d846eecfacb099e95e77fb2f10dbd03c262a66d2374df5b920",
    "format": 1
   },
   {
@@ -9521,6 +9563,13 @@
    "format": 1
   },
   {
+   "name": "5_playbook_installmssql.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "db0e0ccd0b907a731fbdd01f85d5b28bded858c5cb6bf1be90c680dad4a14a40",
+   "format": 1
+  },
+  {
    "name": ".github",
    "ftype": "dir",
    "chksum_type": null,
@@ -9553,6 +9602,27 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "eb8f4dbade842b3296e42d1d9bade582855d908e6b28ed8775d26d25ceb9da7d",
+   "format": 1
+  },
+  {
+   "name": "group_vars",
+   "ftype": "dir",
+   "chksum_type": null,
+   "chksum_sha256": null,
+   "format": 1
+  },
+  {
+   "name": "group_vars/sqlservers.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "736399d65b7dbf9e988f9c756bdf013d0c3c32d216209d8129f8cacab948abc4",
+   "format": 1
+  },
+  {
+   "name": "group_vars/vault.yml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "7b79330710ad21791eb2421802af702bde0627f86a445c5e76f27791fa707a47",
    "format": 1
   },
   {

@@ -1,0 +1,27 @@
+sql_install_disks_to_format:
+  - { number: 1, letter: "T", label: "TEMPDB" }
+  - { number: 2, letter: "E", label: "DATA" }
+  - { number: 3, letter: "F", label: "LOG" }
+
+sql_install_edition: "Standard Developer"
+sql_install_instance_name: TESTDSC2025
+sql_install_instance_port: 1533
+
+sql_install_installdb_path: 'E:\{{ sql_install_instance_name }}\'
+sql_install_instance_dir: C:\Program Files\Microsoft SQL Server
+sql_install_userdb_path: 'E:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_userdblog_path: 'F:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_tempdb_path: 'T:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_tempdblog_path: 'T:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_backup_path: 'T:\{{ sql_install_instance_name }}\BACKUP'
+
+#sql_install_issvcaccount: NT Service\MsDtsServer160
+
+# sql_install_iso_source:
+#   - name: SQLServer2022_Dev.iso
+#     version: SQL2022
+#     config: config2022.j2
+
+# sql_install_update_source:
+#   - name: updates
+#     version: SQL2022
