@@ -54,9 +54,9 @@ sql_install_backup_path: T:\BACKUP
 # =============================================================================
 # Configure service accounts and security settings.
 sql_install_sql_svc_account:
-sql_install_sql_svc_password:
+# sql_install_sql_svc_password: 'notused'  # Default to "notused" if not defined
 sql_install_agent_svc_account:
-sql_install_agent_svc_password:
+# sql_install_agent_svc_password: 'notused'  # Default to "notused" if not defined
 sql_install_sql_svc_startup_type: "Automatic"
 sql_install_agent_svc_startup_type: "Automatic"
 sql_install_sysadminaccount: "Administrators"
@@ -90,7 +90,7 @@ sql_install_issvcaccount: NT Service\MsDtsServer160
 sql_install_issvcpassword:
 sql_install_install_ssisdb: "true"
 
-# =============================================================================
+# =================================s============================================
 # Updates
 # =============================================================================
 # Windows and SQL Server update settings.
@@ -118,6 +118,5 @@ sql_install_dbmail:
 # =============================================================================
 # Miscellaneous
 # =============================================================================
-sql_install_powershell_modules_path: "../"
 sql_install_source_path: ""  # Dynamically set in install.yml
 sql_install_product_key: ""  # Use Ansible Vault for production
