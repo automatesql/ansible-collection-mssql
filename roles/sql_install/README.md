@@ -1,11 +1,15 @@
 ## SQL_INSTALL
 
 This role can perform the following actions:
+* Mount and dismount SQL Server ISO files.
 * Prepare and format disks for SQL Server data, logs, and TempDB.
-* Install any specified edition of SQL Server from an ISO file.
+* Install any supported edition of SQL Server.
 * Apply cumulative updates.
+* Configure firewall rules for the SQL Server instance.
 * Configure service accounts, memory, and security settings.
 * Deploy and configure Database Mail.
+* Create and configure the SSISDB catalog.
+* Create SQL Server Agent operators and alerts.
 * Deploy a utility database containing industry-standard maintenance solutions.
 * Create and schedule essential SQL Server Agent jobs.
 
