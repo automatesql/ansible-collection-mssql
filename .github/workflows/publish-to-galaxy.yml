@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Ansible
-        run: pip install ansible
+      - name: Install Ansible and dependencies
+        run: pip install ansible distlib
 
       - name: Get version from release tag
         id: get_version
