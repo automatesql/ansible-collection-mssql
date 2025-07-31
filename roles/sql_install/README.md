@@ -29,7 +29,7 @@ Before using this role, the target Windows host must have the following PowerShe
 * **SqlServer**
 * **SqlServerDsc**
 
-These can be installed using a separate playbook with the `ansible.windows.win_psmodule` module (if the hosts have internet access).
+These can be installed using a separate playbook with the `ansible.windows.win_psmodule` module (if the hosts have internet access) or by using the `automatesql.mssql.manage_powershell_modules` role found in this collection.
 
 ## Role Variables
 
