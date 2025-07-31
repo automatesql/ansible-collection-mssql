@@ -4,7 +4,12 @@ manage_powershell_modules_to_install:
   - SqlServerDsc
   - SqlServer
 
+# The method to install PowerShell modules. Can be 'gallery' (from PowerShell Gallery) or 'local' (from a local path on the Ansible controller).
+manage_powershell_modules_install_method: 'gallery'
 
+# If 'manage_powershell_modules_install_method' is set to 'local', specify the path on the Ansible controller where the module files are located.
+# Example: '/path/to/your/modules'
+manage_powershell_modules_local_path: '../'
 
 # A temporary folder used for staging the modules before installation.
 manage_powershell_modules_temp_folder: C:/temp/modules

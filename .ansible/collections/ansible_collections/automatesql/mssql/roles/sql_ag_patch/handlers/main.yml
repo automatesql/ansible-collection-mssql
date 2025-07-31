@@ -1,6 +1,4 @@
 ---
-
-
 - name: Cleanup temporary files
   ansible.windows.win_file:
     path: "{{ sql_patch_temp_folder }}"

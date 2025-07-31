@@ -1,15 +1,17 @@
 ## SQL_INSTALL
 
 This role can perform the following actions:
+* Mount and dismount SQL Server ISO files.
 * Prepare and format disks for SQL Server data, logs, and TempDB.
-* Install any specified edition of SQL Server from an ISO file.
+* Install any supported edition of SQL Server.
 * Apply cumulative updates.
+* Configure firewall rules for the SQL Server instance.
 * Configure service accounts, memory, and security settings.
 * Deploy and configure Database Mail.
+* Create and configure the SSISDB catalog.
+* Create SQL Server Agent operators and alerts.
 * Deploy a utility database containing industry-standard maintenance solutions.
 * Create and schedule essential SQL Server Agent jobs.
-
-> Currently written to support only default SQL Server instances.  Updates coming soon to support named instances.
 
 ---
 
@@ -27,7 +29,7 @@ Before using this role, the target Windows host must have the following PowerShe
 * **SqlServer**
 * **SqlServerDsc**
 
-These can be installed using a separate playbook with the `ansible.windows.win_psmodule` module (if the hosts have internet access).
+These can be installed using a separate playbook with the `ansible.windows.win_psmodule` module (if the hosts have internet access) or by using the `automatesql.mssql.manage_powershell_modules` role found in this collection.
 
 ## Role Variables
 
@@ -42,9 +44,9 @@ This role is highly configurable using the following variables.
 ### Core Installation Settings
 | Variable | Default Value | Description |
 |---|---|---|
-| `sql_install_edition` | `"Standard Developer"` | The edition of SQL Server to install (applies to SQL Server 2025)  (e.g., "Standard Developer", "Enterprise Developer"). |
-| `sql_install_iso_source` | (see defaults) | A list containing the name of the SQL Server ISO, a version identifier, and the configuration template to use. |
-| `sql_install_update_source` | (see defaults) | A list containing the name of the update package and a version identifier. |
+| `sql_install_edition` | `"Standard Developer"` | The edition of SQL Server to install (e.g., "Standard Developer", "Enterprise Developer"). |
+| `sql_install_iso_source` | (see defaults) | A list of dictionaries containing the name of the SQL Server ISO and a version identifier. |
+| `sql_install_update_source` | (see defaults) | A list of dictionaries containing the name of the update package and a version identifier. |
 | `sql_install_share` | `"/home/username/ISO/"` | The local path on the Ansible control node where the ISO and update files are located. |
 | `sql_install_temp_folder` | `C:\temp` | A temporary folder on the target host for installation files. |
 | `sql_install_enableupdates` | `"true"` | Whether to enable Microsoft Updates for SQL Server during installation. |
@@ -52,14 +54,16 @@ This role is highly configurable using the following variables.
 | `sql_install_instance_name` | `MSSQLSERVER` | The name of the SQL Server instance. Use `MSSQLSERVER` for the default instance. |
 | `sql_install_sqlcollation` | `SQL_Latin1_General_CP1_CI_AS` | The collation for the SQL Server instance. |
 | `sql_install_instance_port` | `1433` | The TCP port for the SQL Server instance. |
+| `sql_install_security_mode` | `SQL` | The authentication mode for SQL Server. Can be `SQL` or `Windows`. |
+| `sql_install_tcp_enabled` | `true` | Whether to enable the TCP/IP protocol for the SQL Server instance. |
 
 ### Service Accounts
 | Variable | Default Value | Description |
 |---|---|---|
-| `sql_install_svcaccount` | `NT Service\MSSQLSERVER` | The service account for the SQL Server Database Engine. |
-| `sql_install_svcpassword` | (empty) | The password for the Database Engine service account. Use Ansible Vault for this value. |
-| `sql_install_svcagentaccount` | `NT Service\SQLSERVERAGENT` | The service account for the SQL Server Agent. |
-| `sql_install_svcagentpassword` | (empty) | The password for the Agent service account. Use Ansible Vault for this value. |
+| `sql_install_sql_svc_account` | `NT Service\MSSQLSERVER` | The service account for the SQL Server Database Engine. |
+| `sql_install_sql_svc_password` | (empty) | The password for the Database Engine service account. Use Ansible Vault for this value. |
+| `sql_install_agent_svc_account` | `NT Service\SQLSERVERAGENT` | The service account for the SQL Server Agent. |
+| `sql_install_agent_svc_password` | (empty) | The password for the Agent service account. Use Ansible Vault for this value. |
 | `sql_install_issvcaccount` | `NT Service\MsDtsServer160` | The service account for SQL Server Integration Services (SSIS). |
 | `sql_install_issvcpassword` | (empty) | The password for the SSIS service account. Use Ansible Vault for this value. |
 | `sql_install_sqlsvcinstantfileinit` | `"true"` | Whether to grant the "Perform volume maintenance tasks" permission to the SQL service account for Instant File Initialization. |

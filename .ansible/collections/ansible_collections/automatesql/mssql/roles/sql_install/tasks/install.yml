@@ -1,4 +1,8 @@
 ---
+- name: Set SourcePath from mounted ISO
+  ansible.builtin.set_fact:
+    sql_install_source_path: "{{ disk_image_out.results[0].mount_paths[0] }}"
+
 - name: Set UpdateSource variable if updates are enabled
   ansible.builtin.set_fact:
     sql_install_update_source_path: '{{ sql_install_temp_folder }}\updates'
@@ -28,7 +32,6 @@
     dest: "{{ role_path }}/tmp/sql_setup_rendered_task_{{ inventory_hostname }}.yml"
     mode: '0644'
   delegate_to: localhost
-  run_once: true
   vars:
     ansible_shell_type: sh
     ansible_shell_executable: /bin/sh
@@ -42,7 +45,6 @@
     path: "{{ role_path }}/tmp/sql_setup_rendered_task_{{ inventory_hostname }}.yml"
     state: absent
   delegate_to: localhost
-  run_once: true
   vars:
     ansible_shell_type: sh
     ansible_shell_executable: /bin/sh

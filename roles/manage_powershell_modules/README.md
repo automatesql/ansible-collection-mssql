@@ -10,6 +10,8 @@ This role manages PowerShell modules on Windows hosts. It can be used to ensure 
 ## Role Variables
 
 - `manage_powershell_modules_to_install`: A list of PowerShell modules to install. Default: `['SqlServerDsc', 'SqlServer']`
+- `manage_powershell_modules_install_method`: The method to install PowerShell modules. Can be `'gallery'` (from PowerShell Gallery) or `'local'` (from a local path on the Ansible controller). Default: `'gallery'`
+- `manage_powershell_modules_local_path`: If `manage_powershell_modules_install_method` is set to `'local'`, specify the absolute path on the Ansible control node where the module files are located. Example: `'/home/user/ansible_modules'`
 
 
 ## Dependencies

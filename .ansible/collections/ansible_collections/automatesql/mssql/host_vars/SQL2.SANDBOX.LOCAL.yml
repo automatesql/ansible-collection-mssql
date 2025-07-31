@@ -1,2 +1,10 @@
 sql_install_edition: "Standard Developer"
 sql_install_issvcaccount: NT Service\MsDtsServer170
+
+sql_install_installdb_path: 'E:\{{ sql_install_instance_name }}\'
+sql_install_instance_dir: C:\Program Files\Microsoft SQL Server
+sql_install_userdb_path: 'E:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_userdblog_path: 'F:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_tempdb_path: 'T:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_tempdblog_path: 'T:\{{ sql_install_instance_name }}\SQLDATA'
+sql_install_backup_path: 'T:\{{ sql_install_instance_name }}\BACKUP'

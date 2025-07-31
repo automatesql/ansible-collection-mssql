@@ -1,0 +1,25 @@
+---
+- name: Create SQL Server Agent Alerts
+  ansible.windows.win_dsc:
+    resource_name: Script
+    TestScript: |
+      $ErrorActionPreference = "Stop"
+      $server = New-Object Microsoft.SqlServer.Management.Smo.Server("{{ instance_name_var }}")
+      $agent = $server.JobServer
+      return $agent.Alerts.Contains("{{ item.name }}")
+    SetScript: |
+      $ErrorActionPreference = "Stop"
+      $server = New-Object Microsoft.SqlServer.Management.Smo.Server("{{ instance_name_var }}")
+      $agent = $server.JobServer
+      $alert = New-Object Microsoft.SqlServer.Management.Smo.Agent.Alert($agent, "{{ item.name }}")
+      $alert.Severity = {{ item.severity }}
+      $alert.MessageId = {{ item.message_id }}
+      $alert.DelayBetweenResponses = {{ item.delay_between_responses }}
+      $alert.IncludeEventDescription = {{ item.include_event_description }}
+      $alert.Create()
+      $alert.AddNotification("{{ sql_install_dbagent_operator[0].name }}", [Microsoft.SqlServer.Management.Smo.Agent.NotifyMethods]::NotifyEmail)
+      $alert.Alter()
+    GetScript: |
+      # This script is not strictly necessary for idempotency but is required by the resource.
+      @{ Result = "SQL Agent Alert Configuration" }
+  loop: "{{ sql_install_sqlagent_alerts }}"

@@ -20,7 +20,7 @@ This collection currently includes the following roles:
 
 *   **`sql_install`**: Performs a complete, automated installation and configuration of a standalone SQL Server instance.
 *   **`sql_ag_patch`**: Manages the rolling patch process for a SQL Server Always On Availability Group with minimal downtime.
-*   **`manage_powershell_modules`**: Installs and manages PowerShell modules on Windows hosts.
+*   **`manage_powershell_modules`**: Installs PowerShell modules on Windows hosts, either from the PowerShell Gallery or a local path.
 
 For detailed information on role-specific variables, requirements, and workflows, please refer to the `README.md` file within each role's directory.
 
@@ -67,12 +67,12 @@ This playbook uses the `sql_ag_patch` role to apply updates to an existing Avail
     sql_patch_source: "//FileServer/SQL_Updates/"
     sql_patch_filename: "SQLServer2019-KB5011644-x64.exe"
     sql_patch_checksum: "a1b2c3d4..." # Replace with actual checksum
-    powershell_modules_path: "../"
+    
   
   tasks: 
     - name: Import the sql_ag_patch role
       ansible.builtin.import_role:
-        name: automatesql.mssql.sql_install  
+        name: automatesql.mssql.sql_ag_patch  
 ```
 
 ## License
@@ -85,7 +85,7 @@ This collection was created by [Luke Campbell](https://www.automatesql.com).
 
 ## Third-Party Components
 
-This collection bundles the following PowerShell modules:
+This collection utilizes the following PowerShell modules as prerequisites:
 
-*   **SqlServer**: For managing SQL Server instances. License information can be found in `roles/manage_powershell_modules/files/NOTICE_SqlServer.txt`.
-*   **SqlServerDSC**: For declarative configuration of SQL Server. License information can be found in `roles/manage_powershell_modules/files/LICENSE_SqlServerDSC.txt`.
+*   **SqlServer**: For managing SQL Server instances. This module can be installed from the PowerShell Gallery using the `manage_powershell_modules` role.
+*   **SqlServerDSC**: For declarative configuration of SQL Server. This module can be installed from the PowerShell Gallery using the `manage_powershell_modules` role.

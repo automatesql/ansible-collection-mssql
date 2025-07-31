@@ -61,6 +61,10 @@
   ansible.builtin.include_tasks: sqlagentfailsafeoperators.yml
   tags: create-dbateam-operator
 
+- name: Create SQL Server Agent alerts for high-severity errors
+  ansible.builtin.include_tasks: sqlagentalerts.yml
+  tags: create-agent-alerts
+
 - name: Create standard maintenance jobs
   ansible.builtin.include_tasks: sqlagentjobs.yml
   tags: create-standard-maintenance-jobs

@@ -1,12 +1,4 @@
 ---
-- name: Uninstall SqlServer module on failure
-  community.windows.win_psmodule:
-    name: "{{ item }}"
-    state: absent
-  loop:
-    - SqlServer
-    - SqlServerDsc
-
 - name: Delete source files
   ansible.windows.win_file:
     path: "{{ sql_install_temp_folder }}"

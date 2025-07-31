@@ -9,17 +9,13 @@ sql_install_disks_to_format:
 sql_install_edition: "Standard Developer"
 sql_install_prep_disks: "true"
 sql_install_temp_folder: C:\temp
-sql_install_share: "/home/lcampbell/level1/ISO/" # set this directory to your home directory
+sql_install_share: "/home/lcampbell/level1/ISO/" # set this directory to the location of your ISO file.
 sql_install_enableupdates: "true"
 sql_install_features: SQLENGINE,REPLICATION,FULLTEXT,IS
 sql_install_instance_name: MSSQLSERVER
 sql_install_installshareddir: C:\Program Files\Microsoft SQL Server
 sql_install_installsharedwowdir: C:\Program Files (x86)\Microsoft SQL Server
 sql_install_sqlcollation: SQL_Latin1_General_CP1_CI_AS
-#sql_install_svcaccount: NT Service\MSSQLSERVER # keeping it simple for Level 1.  Using builtin system accounts.  You can override the defaults at runtime.
-#sql_install_svcpassword: # This variable should be moved to /vars/sensitive_vars.yml if used.
-#sql_install_svcagentaccount: NT Service\SQLSERVERAGENT # keeping it simple for Level 1.  Using builtin system accounts.  You can override the defaults at runtime.
-#sql_install_svcagentpassword: #This variable should be moved to /vars/sensitive_vars.yml if used.
 sql_install_installdb_path: "E:"
 sql_install_instance_dir: C:\Program Files\Microsoft SQL Server
 sql_install_userdb_path: E:\SQLDATA

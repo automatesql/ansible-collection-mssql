@@ -1,6 +1,0 @@
-This Ansible collection bundles the SqlServer PowerShell module as downloaded from PowerShell Gallery.
-
-The module is copyright © Microsoft and distributed under the SQL Server PowerShell Extensions License Terms:
-https://learn.microsoft.com/en-us/legal/sql/sql-server-powershell-license-terms
-
-No modifications have been made to the original object code.

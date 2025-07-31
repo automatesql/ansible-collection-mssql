@@ -113,10 +113,10 @@ The following variables can be defined to control the role's behavior.
     sql_patch_source: "//FileServer/SQL_Updates/"
     sql_patch_filename: "SQLServer2019-KB5011644-x64.exe"
     sql_patch_checksum: "a1b2c3d4..." # Replace with actual checksum
-    powershell_modules_path: "../"
+    
   
   tasks: 
     - name: Import the sql_ag_patch role
       ansible.builtin.import_role:
-        name: automatesql.mssql.sql_install  
+        name: automatesql.mssql.sql_ag_patch  
 ```
