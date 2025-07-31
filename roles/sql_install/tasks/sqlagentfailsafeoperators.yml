@@ -7,7 +7,7 @@
     EmailAddress: "{{ item.email }}"
     ServerName: "localhost"
     InstanceName: "{{ sql_install_instance_name }}"
-  loop: "{{ sql_install_dbagent_operator }}"
+  loop: "{{ sql_install_sqlagent_operator }}"
 
 - name: Configure Failsafe operator
   ansible.windows.win_dsc:
@@ -17,4 +17,4 @@
     ServerName: "localhost"
     Instancename: "{{ sql_install_instance_name }}"
     NotificationMethod: "NotifyEmail"
-  loop: "{{ sql_install_dbagent_operator }}"
+  loop: "{{ sql_install_sqlagent_operator }}"

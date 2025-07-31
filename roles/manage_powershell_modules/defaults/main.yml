@@ -1,7 +1,10 @@
 ---
+# The list of PowerShell modules to install on the target hosts.
 manage_powershell_modules_to_install:
   - SqlServerDsc
   - SqlServer
 
-manage_powershell_modules_path: "C:/Program Files/WindowsPowerShell/Modules"
+
+
+# A temporary folder used for staging the modules before installation.
 manage_powershell_modules_temp_folder: C:/temp/modules

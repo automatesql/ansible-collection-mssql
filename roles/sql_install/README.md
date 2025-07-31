@@ -41,8 +41,8 @@ This role is highly configurable using the following variables.
 | Variable | Default Value | Description |
 |---|---|---|
 | `sql_install_edition` | `"Standard Developer"` | The edition of SQL Server to install (e.g., "Standard Developer", "Enterprise Developer"). |
-| `sql_install_iso_source` | (see defaults) | A list containing the name of the SQL Server ISO and a version identifier. |
-| `sql_install_update_source` | (see defaults) | A list containing the name of the update package and a version identifier. |
+| `sql_install_iso_source` | (see defaults) | A list of dictionaries containing the name of the SQL Server ISO and a version identifier. |
+| `sql_install_update_source` | (see defaults) | A list of dictionaries containing the name of the update package and a version identifier. |
 | `sql_install_share` | `"/home/username/ISO/"` | The local path on the Ansible control node where the ISO and update files are located. |
 | `sql_install_temp_folder` | `C:\temp` | A temporary folder on the target host for installation files. |
 | `sql_install_enableupdates` | `"true"` | Whether to enable Microsoft Updates for SQL Server during installation. |

@@ -10,7 +10,7 @@ This role manages PowerShell modules on Windows hosts. It can be used to ensure 
 ## Role Variables
 
 - `manage_powershell_modules_to_install`: A list of PowerShell modules to install. Default: `['SqlServerDsc', 'SqlServer']`
-- `manage_powershell_modules_path`: The path to install the PowerShell modules to. Default: `C:\Program Files\WindowsPowerShell\Modules`
+
 
 ## Dependencies
 

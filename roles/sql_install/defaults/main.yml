@@ -98,7 +98,7 @@ sql_install_enableupdates: "true"
 sql_install_update_source_path: ""  # Dynamically set in install.yml
 
 # =============================================================================
-# Database Mail and Operators
+# Database Mail
 # =============================================================================
 # Configuration for Database Mail and SQL Agent operators.
 sql_install_dbagent_operator:
@@ -116,7 +116,31 @@ sql_install_dbmail:
     tcpport: 25
 
 # =============================================================================
+# SQL Server Agent Operators and Alerts
+# =============================================================================
+# Configuration for SQL Server Agent operators and alerts.
+sql_install_sqlagent_operator:
+  - name: DBATeam
+    email: DBATeam@bogusdomain.com
+
+sql_install_sqlagent_alerts:
+  - { name: "Severity 016", message_id: 0, severity: 16, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 017", message_id: 0, severity: 17, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 018", message_id: 0, severity: 18, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 019", message_id: 0, severity: 19, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 020", message_id: 0, severity: 20, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 021", message_id: 0, severity: 21, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 022", message_id: 0, severity: 22, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 023", message_id: 0, severity: 23, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 024", message_id: 0, severity: 24, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Severity 025", message_id: 0, severity: 25, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Error Number 824", message_id: 824, severity: 0, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Error Number 825", message_id: 825, severity: 0, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Error Number 826", message_id: 826, severity: 0, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+  - { name: "Error Number 829", message_id: 829, severity: 0, enabled: 1, delay_between_responses: 60, include_event_description: 1 }
+
+# =============================================================================
 # Miscellaneous
 # =============================================================================
 sql_install_source_path: ""  # Dynamically set in install.yml
-sql_install_product_key: ""  # Use Ansible Vault for production
+sql_install_product_key: ""
