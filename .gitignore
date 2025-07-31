@@ -7,4 +7,4 @@ ansible.cfg
 /host_vars
 *.nvm
 /roles/sql_install/tmp/*.*
-
+/.ansible

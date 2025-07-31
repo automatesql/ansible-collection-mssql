@@ -1,5 +1,0 @@
----
-- name: Delete source files
-  ansible.windows.win_file:
-    path: "{{ sql_install_temp_folder }}"
-    state: absent
