@@ -6,7 +6,7 @@ This collection will grow over time to include more roles for comprehensive SQL 
 
 ---
 
-### **🚀 Want to Become an Expert?**
+### **Not familiar with how Ansible can help you as a SQL Server DBA?**
 
 This collection provides the tools to manage SQL Server. My comprehensive course teaches you the advanced patterns and best practices to use it. You'll get access to advanced playbooks, the inventory file examples, and access to the the AutomateSQL Insiders Community to help you master SQL Server automation.
 
@@ -18,7 +18,7 @@ This collection provides the tools to manage SQL Server. My comprehensive course
 
 This collection currently includes the following roles:
 
-*   **`sql_install`**: Performs a complete, automated installation and configuration of a standalone SQL Server instance.
+*   **`sql_install`**: Performs a complete, automated installation and configuration of a standalone SQL Server instance. This includes creating SQL Server Agent alerts and operators.
 *   **`sql_ag_patch`**: Manages the rolling patch process for a SQL Server Always On Availability Group with minimal downtime.
 *   **`manage_powershell_modules`**: Installs PowerShell modules on Windows hosts, either from the PowerShell Gallery or a local path.
 

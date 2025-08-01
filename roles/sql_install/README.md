@@ -15,7 +15,7 @@ This role can perform the following actions:
 
 ---
 
-### **Want to Become an Expert?**
+### **Not familiar with how Ansible can help you as a SQL Server DBA?**
 
 This collection provides the tools to manage SQL Server. My comprehensive course teaches you the advanced patterns and best practices to use it. You'll get access to advanced playbooks, the inventory file examples, and access to the the AutomateSQL Insiders Community to help you master SQL Server automation.
 
@@ -96,6 +96,7 @@ This role is highly configurable using the following variables.
 |---|---|---|
 | `sql_install_install_ssisdb` | `"true"` | Whether to create and configure the SSISDB catalog. |
 | `sql_install_dbagent_operator` | (see defaults) | A list defining the name and email for a SQL Server Agent operator. |
+| `sql_install_sqlagent_alerts` | (see defaults) | A list of dictionaries defining the SQL Server Agent alerts to create. |
 | `sql_install_dbmail` | (see defaults) | A list of settings to configure Database Mail. |
 
 ## Utility Database and Maintenance Jobs
