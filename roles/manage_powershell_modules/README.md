@@ -23,7 +23,7 @@ This role manages PowerShell modules on Windows hosts. It can be used to ensure 
 ```yaml
 - hosts: all
   roles:
-    - role: manage_powershell_modules
+    - role: automatesql.mssql.manage_powershell_modules
       vars:
         manage_powershell_modules_to_install:
           - SqlServerDsc

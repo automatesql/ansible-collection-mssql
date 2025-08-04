@@ -74,6 +74,17 @@ This playbook uses the `sql_ag_patch` role to apply updates to an existing Avail
       ansible.builtin.import_role:
         name: automatesql.mssql.sql_ag_patch  
 ```
+### Example 3: Install SqlServer and SqlServerDsc PowerShell Modules
+
+```yaml
+- hosts: all
+  roles:
+    - role: automatesql.mssql.manage_powershell_modules
+      vars:
+        manage_powershell_modules_to_install:
+          - SqlServerDsc
+          - SqlServer
+```
 
 ## License
 
