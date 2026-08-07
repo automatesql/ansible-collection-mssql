@@ -10,7 +10,6 @@ This collection will grow over time to include more roles for comprehensive SQL 
 
 This collection provides the tools to manage SQL Server. My comprehensive course teaches you the advanced patterns and best practices to use it. You'll get access to advanced playbooks, the inventory file examples, and access to the the AutomateSQL Insiders Community to help you master SQL Server automation.
 
-**[Enroll in the Ansible for SQL Server DBAs course now!](https://www.automatesql.com/ansible)**
 
 ---
 
